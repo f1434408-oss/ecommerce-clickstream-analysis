@@ -38,4 +38,44 @@ def get_country_name(df):
 
     return df
 
-    
+def clean_currency_data(df):
+    """
+    Cleans and validates the PRICE column.
+
+    - Removes null values
+    - Removes non-positive prices (<= 0)
+    - Logs number of affected rows
+
+    Parameters:
+        df (pd.DataFrame)
+
+    Returns:
+        pd.DataFrame
+    """
+
+    # Store initial row count for comparison
+    initial_rows = len(df)
+
+    # Count null values before cleaning
+    null_count = df["price"].isnull().sum()
+
+    # Remove null values
+    df = df.dropna(subset=["price"])
+
+    # Count non-positive values
+    non_positive_count = (df["price"] <= 0).sum()
+
+    # Keep only valid prices (> 0)
+    df = df[df["price"] > 0]
+
+    # Store final row count
+    final_rows = len(df)
+
+    # Print summary (data quality check)
+    print("=== Data Cleaning Summary ===")
+    print(f"Initial rows: {initial_rows}")
+    print(f"Null values removed: {null_count}")
+    print(f"Non-positive values removed: {non_positive_count}")
+    print(f"Final rows: {final_rows}")
+
+    return df
